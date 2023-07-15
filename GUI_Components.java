@@ -1,20 +1,33 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GUI_Components
 {
     private JFrame mainWindow;
+    private JFormattedTextField display;
     private JPanel numbersPanel;
     private JPanel mathPanel;
+    private Calculator calculator;
 
     public GUI_Components()
     {
+        calculator = new Calculator();
         //setting up the main application window
         mainWindow = new JFrame();
+        mainWindow.setLayout(new GridBagLayout());
         mainWindow.setSize(1020, 720);
         mainWindow.setName("MainWindow");
         mainWindow.setTitle("Calculator App");
         mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        //Setting up the display
+        display = new JFormattedTextField();
+        display.setName("Display");
+        display.setValue(0);
+        display.setPreferredSize(new Dimension(800,100));
+        display.setFont(new Font("Display Font", Font.PLAIN, 16));
 
         //setting up the numbersPanel
         numbersPanel = new JPanel(new GridBagLayout());
@@ -76,10 +89,69 @@ public class GUI_Components
 
         //setting up the mathPanel. aka all the functions like +*/-
         mathPanel = new JPanel(new GridBagLayout());
+        JButton add, mult, div, sub;
+        add = new JButton();
+        add.setName("ButtonAdd");
+        add.setText("+");
+        add.setPreferredSize(new Dimension(50,50));
+        add.setFont(buttonsFont);
+        constraints = new GridBagConstraints();
+        constraints.gridy = 0;
+        constraints.gridx = 0;
+        add.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Double newVal = SupportFunction.parseValue(display.getText());
+                Double result = calculator.add(newVal);
+                updateDisplay();
+            }
+        });
+        mathPanel.add(add, constraints);
+
+        mult = new JButton();
+        mult.setName("ButtonMult");
+        mult.setText("*");
+        mult.setPreferredSize(new Dimension(50,50));
+        mult.setFont(buttonsFont);
+        constraints = new GridBagConstraints();
+        constraints.gridy = 0;
+        constraints.gridx = 1;
+        mult.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Double newVal = SupportFunction.parseValue(display.getText());
+                Double result = calculator.multiply(newVal);
+                updateDisplay();
+            }
+        });
+        mathPanel.add(mult, constraints);
+
 
         //adding Panels to mainWindow
-        mainWindow.add(mathPanel);
-        mainWindow.add(numbersPanel);
+        constraints = new GridBagConstraints();
+        constraints.gridy = 0;
+        constraints.gridx = 0;
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        mainWindow.add(display, constraints);
+
+        constraints = new GridBagConstraints();
+        constraints.gridy = 1;
+        constraints.gridx = 0;
+        mainWindow.add(mathPanel, constraints);
+
+        constraints = new GridBagConstraints();
+        constraints.gridy = 1;
+        constraints.gridx = 1;
+        mainWindow.add(numbersPanel, constraints);
+    }
+
+    private void updateDisplay()
+    {
+        String m1 = calculator.getValueHistory(1);
+        String m2 = calculator.getValueHistory(2);
+
+        String result = m1 + "\n" + m2;
+        display.setText(result);
     }
 
     public void setVisible()
