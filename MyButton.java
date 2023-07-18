@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 public class MyButton extends JButton
 {
-    public MyButton(String v, TextField display)
+    public MyButton(String v, JFormattedTextField display)
     {
         Font buttonFont = new Font("Sans Serif", Font.PLAIN, 20);
         this.setFont(buttonFont);
